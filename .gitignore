@@ -2,7 +2,7 @@
 .env
 
 # Local virtual environment
-venv/
+/venv
 
 # Python cache files
-__pycache__/
+/__pycache__
