@@ -4,30 +4,36 @@ import chromadb
 from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
+from dotenv import load_dotenv
 
-# === Step 1: Load your CSV ===
+# === Load your CSV ===
 df = pd.read_csv("realistic_restaurant_reviews.csv")
 
-# === Step 2: Initialize Ollama embeddings ===
+# === Initialize Ollama embeddings ===
 embeddings = OllamaEmbeddings(model="mxbai-embed-large")
 
-# === Step 3: Connect to Chroma Cloud using HttpClient ===
+# === Load .env variables ===
+load_dotenv()
+CHROMA_TENANT = os.getenv("ChromaDB_Token_Key")
+CHROMA_API_KEY = os.getenv("ChromaDB_API_Key")
+
+# === Connect to Chroma Cloud using HttpClient ===
 client = chromadb.HttpClient(
     ssl=True,
     host='api.trychroma.com',
-    tenant='05aa9bac-728c-4821-a88d-34153e48bcdf',
+    tenant=CHROMA_TENANT,
     database='vector_store',
     headers={
-        'x-chroma-token': 'ck-3cgGCDi9TmXEjEQCsBivV2wXwSsN3qRQDuEAiHQtycxf'
+        'x-chroma-token': CHROMA_API_KEY
     }
 )
 
-# === Step 4: Collection configuration ===
+# === Collection configuration ===
 collection_name = "restaurant_reviews"
 existing_collections = [col.name for col in client.list_collections()]
 add_documents = True
 
-# === Step 5: Prepare documents and IDs ===
+# === Prepare documents and IDs ===
 if add_documents:
     documents = []
     ids = []
@@ -39,14 +45,14 @@ if add_documents:
         documents.append(document)
         ids.append(str(i))
 
-# === Step 6: Initialize the Chroma vector store ===
+# === Initialize the Chroma vector store ===
 vector_store = Chroma(
     collection_name=collection_name,
     embedding_function=embeddings,
     client=client
 )
 
-# === Step 7: Add documents in batches of 1000 (Chroma Cloud limit) ===
+# === Add documents in batches of 1000 (Chroma Cloud limit) ===
 if add_documents:
     batch_size = 300
     for i in range(0, len(documents), batch_size):
@@ -54,7 +60,7 @@ if add_documents:
         batch_ids = ids[i:i + batch_size]
         vector_store.add_documents(documents=batch_docs, ids=batch_ids)
 
-# === Step 8: Create retriever ===
+# === Create retriever ===
 retriever = vector_store.as_retriever(search_kwargs={"k": 5})
 
 # Export Chroma client so it can be reused
