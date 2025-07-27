@@ -32,7 +32,7 @@ An intelligent AI-powered assistant tailored for a specific restaurant. This age
 - Ollama with llama3.2 in your machine
 - ChromaDB Cloud setup
 
-## Run Locally
+## Getting Started
 
 Clone the project
 
@@ -49,6 +49,8 @@ cd Agentic_AI
 ## Setting up Ollama in the local machine
 
 Download https://ollama.com
+
+### In your Terminal
 
 ```bash
 ollama
@@ -85,9 +87,7 @@ source ./venv/bin/activate
 pip install -r requirement.txt
 ```
 
-## Getting Started
-
-First, run the development server:
+## Run Locally
 
 ```bash
 python main.py

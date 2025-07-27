@@ -1,0 +1,8 @@
+# local env files
+.env
+
+# local virtual environemnt
+venv/
+
+# local python cache
+__pycache__/
