@@ -1,8 +1,8 @@
-# local env files
+# Local environment variables
 .env
 
-# local virtual environemnt
+# Local virtual environment
 venv/
 
-# local python cache
+# Python cache files
 __pycache__/
